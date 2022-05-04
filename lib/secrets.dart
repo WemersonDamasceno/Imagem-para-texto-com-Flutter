@@ -1,3 +1,3 @@
 class Secrets {
-  static const String apiKey = 'K89124779888957';
+  static const String apiKey = 'YOUR_API_KEY';
 }
