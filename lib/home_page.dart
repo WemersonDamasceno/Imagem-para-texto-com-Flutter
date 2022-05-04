@@ -18,11 +18,12 @@ class _HomePageState extends State<HomePage> {
   late XFile? imagefile = XFile("");
   List palavras = [];
   List<PalavraModel> chipsEscolha = [];
+  final textController = TextEditingController();
 
   Dio dio = Dio();
   String parsedtext = '';
 
-  parsethetext() async {
+  reconhecerPalavrasNaFoto() async {
     // pick a image
     imagefile = (await ImagePicker()
         .pickImage(source: ImageSource.camera, maxWidth: 670, maxHeight: 970));
@@ -78,14 +79,14 @@ class _HomePageState extends State<HomePage> {
                 height: 50,
                 child: ElevatedButton.icon(
                   icon: const Icon(Icons.camera),
-                  onPressed: () => parsethetext(),
+                  onPressed: () => reconhecerPalavrasNaFoto(),
                   label: const Text(
                     'Tire uma foto',
                     style: TextStyle(fontSize: 20),
                   ),
                 ),
               ),
-              const SizedBox(height: 70.0),
+              const SizedBox(height: 20.0),
               Container(
                 alignment: Alignment.center,
                 child: Column(
@@ -93,13 +94,17 @@ class _HomePageState extends State<HomePage> {
                   children: <Widget>[
                     Image.file(
                       File(imagefile!.path.toString()),
-                      width: 150,
-                      height: 150,
+                      width: MediaQuery.of(context).size.width * .8,
+                      fit: BoxFit.cover,
+                      height: 200,
                     ),
-                    Text(
-                      "Textos encontrados",
-                      style: GoogleFonts.montserrat(
-                          fontSize: 20, fontWeight: FontWeight.bold),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: Text(
+                        "Selecione uma palavra",
+                        style: GoogleFonts.montserrat(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
                     ),
                     SingleChildScrollView(
                       child: Wrap(
@@ -120,11 +125,21 @@ class _HomePageState extends State<HomePage> {
                                     element.isSelected = false;
                                   });
                                   chipsEscolha[i].isSelected = true;
+                                  textController.text = chipsEscolha[i].palavra;
                                 });
                               },
                             ),
                           );
                         }),
+                      ),
+                    ),
+                    TextFormField(
+                      controller: textController,
+                      decoration: InputDecoration(
+                        labelText: 'Digite o texto',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
                     ),
                   ],
